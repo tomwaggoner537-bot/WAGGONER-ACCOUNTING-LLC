@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Waggoner Accounting LLC",
   description: "Expert Bookkeeping Solutions For Your Business Success",
+  icons: {
+    icon: "/icon.jpg",  
+  },
 };
 
 export default function RootLayout({
