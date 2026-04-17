@@ -19,7 +19,7 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center px-4 pt-16 pb-12">
         {/* Main Title */}
-        <h2 className="text-[#2dd4a0] font-extrabold text-5xl md:text-7xl tracking-wide mb-2 mt-6">
+        <h2 className="text-[#2dd4a0] font-extrabold text-5xl md:text-7xl tracking-wide mb-2 mt-10">
           WAGGONER
         </h2>
         <p className="text-white text-xl md:text-2xl tracking-[0.3em] font-light mb-3">

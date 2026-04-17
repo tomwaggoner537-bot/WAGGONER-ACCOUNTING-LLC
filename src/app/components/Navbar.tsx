@@ -22,24 +22,22 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1A1A]/95 backdrop-blur-md shadow-2xl h-20">
-
       {/* Container — pl-0 so logo hugs left edge */}
       <div className="max-w-7xl mx-auto pl-0 pr-4 sm:pl-0 sm:pr-6 lg:pl-0 lg:pr-8 h-full">
-
         {/* Flex Row */}
         <div className="flex items-center justify-between h-full">
-
           {/* LOGO — left-aligned, no centering */}
           <div
             className="flex items-center justify-start cursor-pointer flex-shrink-0"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             {/* Bigger logo: h-[68px], wider widths */}
-            <div className="relative h-[90px] w-[330px] sm:w-[340px] md:w-[420px]">
+            <div className="relative h-[120px] w-[350px] sm:w-[340px] md:w-[420px]">
               <Image
                 src="/images/logo.png"
                 alt="Waggoner Accounting Logo"
                 fill
+                sizes= "350px"
                 className="object-contain object-left"
                 priority
               />
@@ -48,18 +46,20 @@ const Navbar: React.FC = () => {
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-            {["home", "about", "services", "packages", "contact"].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item)}
-                className="relative text-white hover:text-[#50E3C2] transition-colors font-medium capitalize text-sm lg:text-base group"
-              >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#50E3C2] group-hover:w-full transition-all duration-300 rounded-full" />
-              </button>
-            ))}
+            {["home", "about", "services", "packages", "contact"].map(
+              (item) => (
+                <button
+                  key={item}
+                  onClick={() => scrollToSection(item)}
+                  className="relative text-white hover:text-[#50E3C2] transition-colors font-medium capitalize text-sm lg:text-base group"
+                >
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#50E3C2] group-hover:w-full transition-all duration-300 rounded-full" />
+                </button>
+              ),
+            )}
 
-          <a
+            <a
               href="tel:+17135020753"
               className="flex items-center gap-2 bg-[#00A680] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#008f6e] hover:shadow-lg hover:shadow-[#00A680]/30 transition-all duration-200 whitespace-nowrap active:scale-95"
             >
@@ -82,16 +82,18 @@ const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-[#1A1A1A]/98 backdrop-blur-md border-t border-gray-700/50">
           <div className="px-4 py-6 space-y-1">
-            {["home", "about", "services", "packages", "contact"].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item)}
-                className="flex items-center gap-3 w-full text-left text-gray-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl capitalize font-medium transition-all"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00A680]" />
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </button>
-            ))}
+            {["home", "about", "services", "packages", "contact"].map(
+              (item) => (
+                <button
+                  key={item}
+                  onClick={() => scrollToSection(item)}
+                  className="flex items-center gap-3 w-full text-left text-gray-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl capitalize font-medium transition-all"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A680]" />
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                </button>
+              ),
+            )}
 
             <div className="pt-3">
               <a
