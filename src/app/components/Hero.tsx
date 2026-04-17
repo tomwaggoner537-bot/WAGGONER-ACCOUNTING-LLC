@@ -81,22 +81,7 @@ export default function Hero() {
             View Our Services
           </a>
         </div>
-
-        {/* Stats */}
-        <div className="flex flex-col sm:flex-row gap-10 sm:gap-20 mt-2">
-          <div className="flex flex-col items-center">
-            <span className="text-[#2dd4a0] font-bold text-4xl">45+</span>
-            <span className="text-gray-300 text-sm mt-1">Years Experience</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-[#2dd4a0] font-bold text-4xl">500+</span>
-            <span className="text-gray-300 text-sm mt-1">Clients Served</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-[#2dd4a0] font-bold text-4xl">100%</span>
-            <span className="text-gray-300 text-sm mt-1">Satisfaction Rate</span>
-          </div>
-        </div>
+        
       </div>
     </section>
   );
