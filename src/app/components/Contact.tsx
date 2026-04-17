@@ -1,10 +1,6 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import axios from "axios";
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
 
 type FormData = {
   name: string;
@@ -15,11 +11,11 @@ type FormData = {
 };
 
 type Status = {
-  type: string;
+  type: "success" | "error" | "";
   message: string;
 };
 
-const ContactSection: React.FC = () => {
+const Contact: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -50,28 +46,37 @@ const ContactSection: React.FC = () => {
     setSubmitStatus({ type: "", message: "" });
 
     try {
-      await axios.post(`${API}/contact`, formData);
-
-      setSubmitStatus({
-        type: "success",
-        message:
-          "Thank you! Your message has been sent successfully. We'll get back to you soon!",
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Form submission error:", error);
+      const data = await res.json();
 
+      if (res.ok) {
+        setSubmitStatus({
+          type: "success",
+          message:
+            "Thank you! Your message has been sent successfully. We'll get back to you soon!",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus({
+          type: "error",
+          message: data.error || "Something went wrong. Please try again.",
+        });
+      }
+    } catch {
       setSubmitStatus({
         type: "error",
-        message:
-          "Oops! Something went wrong. Please try again or call us directly.",
+        message: "Network error. Please try again or call us directly.",
       });
     } finally {
       setIsSubmitting(false);
@@ -97,103 +102,117 @@ const ContactSection: React.FC = () => {
 
               {/* Phone */}
               <div className="flex items-start">
-                <div className="bg-[#00A680] text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 text-xl">
-                  📞
+                <div className="bg-[#00A680] text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 text-xl flex-shrink-0">
+                  {"📞"}
                 </div>
                 <div>
                   <h4 className="font-bold text-lg">Phone</h4>
-                  <p className="text-gray-600">713-502-0753</p>
+                  <a
+                    href="tel:+17135020753"
+                    className="text-gray-600 hover:text-[#00A680] transition-colors"
+                  >
+                    +1 713-502-0753
+                  </a>
                 </div>
               </div>
 
               {/* Email */}
               <div className="flex items-start">
-                <div className="bg-[#00A680] text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 text-xl">
-                  ✉️
+                <div className="bg-[#00A680] text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 text-xl flex-shrink-0">
+                  {"✉️"}
                 </div>
                 <div>
                   <h4 className="font-bold text-lg">Email</h4>
-                  <p className="text-gray-600">
+                  <a
+                    href="mailto:tom@waggoneraccountingllc.com"
+                    className="text-gray-600 hover:text-[#00A680] transition-colors break-all"
+                  >
                     tom@waggoneraccountingllc.com
-                  </p>
+                  </a>
                 </div>
               </div>
 
               {/* Location */}
               <div className="flex items-start">
-                <div className="bg-[#00A680] text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 text-xl">
-                  📍
+                <div className="bg-[#00A680] text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 text-xl flex-shrink-0">
+                  {"📍"}
                 </div>
                 <div>
                   <h4 className="font-bold text-lg">Service Area</h4>
-                  <p className="text-gray-600">
-                    Texas & Nationwide (Remote)
-                  </p>
+                  <p className="text-gray-600">Texas & Nationwide (Remote)</p>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
 
-          {/* RIGHT SIDE FORM */}
+          {/* RIGHT SIDE — FORM */}
           <div>
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <h3 className="text-3xl font-bold mb-6 text-gray-800">
                 Send Us a Message
               </h3>
 
+              {/* Status Message */}
               {submitStatus.message && (
                 <div
-                  className={`mb-6 p-4 rounded-lg ${
+                  className={`mb-6 p-4 rounded-lg flex items-start gap-3 ${
                     submitStatus.type === "success"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
+                      ? "bg-green-50 border border-green-200 text-green-700"
+                      : "bg-red-50 border border-red-200 text-red-700"
                   }`}
                 >
-                  {submitStatus.message}
+                  <span className="text-xl flex-shrink-0">
+                    {submitStatus.type === "success" ? "✅" : "❌"}
+                  </span>
+                  <p className="text-sm font-medium">{submitStatus.message}</p>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
 
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Full Name"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00A680] outline-none"
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Full Name *"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#00A680] outline-none transition-colors text-gray-800 placeholder-gray-400"
+                  />
 
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder="Email"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00A680] outline-none"
-                />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="Email *"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#00A680] outline-none transition-colors text-gray-800 placeholder-gray-400"
+                  />
+                </div>
 
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  placeholder="Phone"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00A680] outline-none"
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    placeholder="Phone *"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#00A680] outline-none transition-colors text-gray-800 placeholder-gray-400"
+                  />
 
-                <input
-                  type="text"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  placeholder="Company (Optional)"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00A680] outline-none"
-                />
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Company (Optional)"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#00A680] outline-none transition-colors text-gray-800 placeholder-gray-400"
+                  />
+                </div>
 
                 <textarea
                   name="message"
@@ -201,16 +220,46 @@ const ContactSection: React.FC = () => {
                   onChange={handleChange}
                   required
                   rows={5}
-                  placeholder="Your message..."
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#00A680] outline-none resize-none"
+                  placeholder="Your message... *"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#00A680] outline-none transition-colors resize-none text-gray-800 placeholder-gray-400"
                 />
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#00A680] text-white py-4 rounded-lg font-semibold"
+                  className={`w-full py-4 rounded-lg font-semibold text-white text-lg transition-all ${
+                    isSubmitting
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-[#00A680] hover:bg-[#008f6e] active:scale-95"
+                  }`}
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8z"
+                        />
+                      </svg>
+                      Sending...
+                    </span>
+                  ) : (
+                    "Send Message"
+                  )}
                 </button>
 
               </form>
@@ -223,4 +272,4 @@ const ContactSection: React.FC = () => {
   );
 };
 
-export default ContactSection;
+export default Contact;
