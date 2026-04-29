@@ -5,7 +5,7 @@ const PricingPackages: React.FC = () => {
   const packages = [
     {
       name: "Starter",
-      price: "$299",
+      price: "$165",
       period: "per month",
       description: "Perfect for small businesses and startups",
       features: [
