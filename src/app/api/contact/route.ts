@@ -19,6 +19,8 @@ export async function POST(req: NextRequest) {
         pass: process.env.GMAIL_APP_PASS, // Gmail App Password (not your login password)
       },
     });
+    console.log("USER:", process.env.GMAIL_USER);
+console.log("PASS:", process.env.GMAIL_APP_PASS ? "✅ loaded" : "❌ MISSING");
 
     await transporter.sendMail({
       from: `"${name} via Waggoner Website" <${process.env.GMAIL_USER}>`,
@@ -67,11 +69,14 @@ export async function POST(req: NextRequest) {
       { success: true, message: "Email sent successfully." },
       { status: 200 }
     );
-  } catch (error) {
-    console.error("Email send error:", error);
-    return NextResponse.json(
-      { error: "Failed to send email. Please try again." },
-      { status: 500 }
-    );
-  }
+ } catch (error) {
+  console.error("Email send error:", error);  // check terminal for this
+  return NextResponse.json(
+    { 
+      error: "Failed to send email.",
+      detail: error instanceof Error ? error.message : String(error)
+    },
+    { status: 500 }
+  );
+}
 }
